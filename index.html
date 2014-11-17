@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="jquery.js"></script>
+<script src="json_liona.js"></script> <!-- hotelsImgLibCont -->
+<script>
+
+var mark = {};
+(function(){
+/*
+* myFunc
+* param root	'root folder'		e.g. 'dir' or '/dir/dir2/dir3'
+* param path    'subfolders'		e.g. '/dir' or 'dir/dir2' or '/dir/dir2'
+* param img	'image name (optional)' !This string must be same as in the perl generated object key value for image
+*/
+this.myFunction = function(obj, root, path, img){
+    
+    if(undefined === root || undefined === path){
+        console.error("Root or Path folder undefined");
+        return undefined;
+    }
+    
+    var a_subfolders = path.split('/');
+    a_subfolders = $.grep(a_subfolders, function(i ,value){
+        return (i !== "");
+    });
+    $.each(a_subfolders, function(i, val){
+        a_subfolders[i] = "/" + val;
+    });
+    
+    var destination;
+    // uses local 'destination' variable to store images, recursive
+    (function parseJSONobject(_current, _it, _subfolders_array_len){
+        var ret = _current[ a_subfolders[_it] ];
+        if(_it < _subfolders_array_len-1){
+            _it += 1;
+            parseJSONobject(ret, _it, _subfolders_array_len);
+        }else{
+            destination = ret;
+        }
+    })(obj, 0, a_subfolders.length);
+    
+    var img_array = new Array();
+    
+    // uses local 'destination' variable to store images and 
+    // local 'img' variable for image name reference, recursive
+    function findImage(_container,_ignore_particular_image){
+        var image_to_search = img;
+        if(true == _ignore_particular_image)
+            image_to_search = undefined;
+        if(undefined === image_to_search){
+            for(var key in _container){
+                if(_container[key] == 1){
+                    img_array.push(key);
+                }else{
+                    findImage(_container[key], true);
+                }
+            }
+        }else{
+            for(var key in _container){
+                if(_container[key] == 1 && key == image_to_search){
+                    img_array.push(key);
+                }else if(_container[key] != 1){
+                    findImage(_container[key]);
+                }
+            }
+        }
+    };
+    
+    if( ! $.isEmptyObject(destination) ){
+        findImage(destination);
+        
+        // If a particular image name was given (4th arg), but was not found by findImage(),
+        // then the path (4rd arg) folder again for a random image
+        if(0 == img_array.length)
+            findImage(destination, true);
+        
+        console.log(img_array);
+        
+        if(0 != img_array.length)
+            return assembleWholePath(path, getRandArrayValue(img_array));
+    }
+    
+    function getRandArrayValue(_array){
+        return _array[Math.floor((Math.random() * _array.length) + 0)];
+    }
+    
+    function assembleWholePath(_path, _img){
+        if(undefined === _path || undefined ===_img)
+            return undefined;
+            
+        return root + _path + _img;
+    }
+    
+    // This function has failed to find and image
+    return undefined;
+};
+}).apply(mark);
+
+$(document).ready(function(){
+    var res = mark.myFunction(hotelsImgLibCont, "COUNTRIES", "/hungary/balaton/azur/", "/11482-club-imola-hotel-img_b.jpg");
+    console.log(res);
+    
+    
+});
+</script>
+</head>
+<body>
+<div class="Content"><p class="pContent"></p></div>
+
+</body>
+</html>
