@@ -10,6 +10,16 @@ var hotelsImgLibCont = {
          },
          "/azur" : {
             "/club-imola" : {
+                "/astoria" : {
+                    "/11514-hotel-astoria-img_b.jpg" : 1,
+                    "/11511-hotel-astoria-img_b.jpg" : 1,
+                    "/11513-hotel-astoria-img_b.jpg" : 1,
+                    "/11512-hotel-astoria-img_b.jpg" : 1,
+                    "/1998-hotel-astoria-img_b.jpg" : 1,
+                    "/1993-hotel-astoria-img_b.jpg" : 1,
+                    "/11510-hotel-astoria-img_b.jpg" : 1,
+                    "/1996-hotel-astoria-img_b.jpg" : 1
+                },
                 "/11485-club-imola-hotel-img_b.jpg" : 1,
                 "/11482-club-imola-hotel-img_b.jpg" : 1,
                 "/11486-club-imola-hotel-img_b.jpg" : 1,

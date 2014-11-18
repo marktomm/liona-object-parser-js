@@ -29,6 +29,9 @@ this.myFunction = function(obj, root, path, img){
     });
     
     var destination;
+    var img_array = new Array();
+    
+    
     // uses local 'destination' variable to store images, recursive
     (function parseJSONobject(_current, _it, _subfolders_array_len){
         var ret = _current[ a_subfolders[_it] ];
@@ -40,28 +43,47 @@ this.myFunction = function(obj, root, path, img){
         }
     })(obj, 0, a_subfolders.length);
     
-    var img_array = new Array();
     
     // uses local 'destination' variable to store images and 
     // local 'img' variable for image name reference, recursive
-    function findImage(_container,_ignore_particular_image){
+    function findImage(_container,_ignore_particular_image, _prepend_path){
         var image_to_search = img;
         if(true == _ignore_particular_image)
             image_to_search = undefined;
         if(undefined === image_to_search){
             for(var key in _container){
                 if(_container[key] == 1){
-                    img_array.push(key);
+                    if(undefined != _prepend_path){
+                        img_array.push(_prepend_path + key);
+                    }else{
+                        img_array.push(key);
+                    }
                 }else{
-                    findImage(_container[key], true);
+                    if(undefined === _prepend_path){
+                        findImage(_container[key], true, key);
+                    }else{
+                        _prepend_path += key;
+                        findImage(_container[key], true, _prepend_path);
+                        _prepend_path = _prepend_path.substring( 0, _prepend_path.lastIndexOf( "/" ) );
+                    }
                 }
             }
         }else{
             for(var key in _container){
                 if(_container[key] == 1 && key == image_to_search){
-                    img_array.push(key);
+                    if(undefined != _prepend_path){
+                        img_array.push(_prepend_path + key);
+                    }else{
+                        img_array.push(key);
+                    }
                 }else if(_container[key] != 1){
-                    findImage(_container[key]);
+                    if(undefined === _prepend_path){
+                        findImage(_container[key], false, key);
+                    }else{
+                        _prepend_path += key;
+                        findImage(_container[key], false, _prepend_path);
+                        _prepend_path = _prepend_path.substring( 0, _prepend_path.lastIndexOf( "/" ) );
+                    }
                 }
             }
         }
@@ -75,10 +97,10 @@ this.myFunction = function(obj, root, path, img){
         if(0 == img_array.length)
             findImage(destination, true);
         
-        console.log(img_array);
+        console.table(img_array);
         
         if(0 != img_array.length)
-            return assembleWholePath(path, getRandArrayValue(img_array));
+            return assembleWholePath(a_subfolders, getRandArrayValue(img_array));
     }
     
     function getRandArrayValue(_array){
@@ -88,8 +110,11 @@ this.myFunction = function(obj, root, path, img){
     function assembleWholePath(_path, _img){
         if(undefined === _path || undefined ===_img)
             return undefined;
-            
-        return root + _path + _img;
+            console.log(typeof _path);
+        if(typeof _path == "object")
+            return root + _path.join("") + _img;
+        else
+            return root + _path + _img;
     }
     
     // This function has failed to find and image
