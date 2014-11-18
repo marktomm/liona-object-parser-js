@@ -29,57 +29,103 @@ this.myFunction = function(obj, root, path, img){
     });
     
     var destination;
-    // uses local 'destination' variable to store images, recursive
-    (function parseJSONobject(_current, _it, _subfolders_array_len){
-        var ret = _current[ a_subfolders[_it] ];
+    var a_images = new Array();
+    var final_result;
+    
+    (function traverseLoop(__it){
+        // uses local 'destination' variable to store array of subfolders, recursive
+        (function parseJSONobject(_current, _it, _subfolders_array_len){
+
+        try
+        {
+            var ret = _current[ a_subfolders[_it] ];
+        }catch(e){
+            a_subfolders.pop();
+            __it -= 1;
+            parseJSONobject(obj, 0, _subfolders_array_len -1);
+
+        }
+        
         if(_it < _subfolders_array_len-1){
-            _it += 1;
-            parseJSONobject(ret, _it, _subfolders_array_len);
-        }else{
-            destination = ret;
-        }
-    })(obj, 0, a_subfolders.length);
-    
-    var img_array = new Array();
-    
-    // uses local 'destination' variable to store images and 
-    // local 'img' variable for image name reference, recursive
-    function findImage(_container,_ignore_particular_image){
-        var image_to_search = img;
-        if(true == _ignore_particular_image)
-            image_to_search = undefined;
-        if(undefined === image_to_search){
-            for(var key in _container){
-                if(_container[key] == 1){
-                    img_array.push(key);
-                }else{
-                    findImage(_container[key], true);
+                _it += 1;
+                parseJSONobject(ret, _it, _subfolders_array_len);
+            }else{
+                destination = ret;
+            }
+        })(obj, 0, __it);
+        
+        
+        // uses local 'a_images' variable to store images and 
+        // local 'img' variable for image name reference, recursive
+        function findImage(_container,_ignore_particular_image, _prepend_path){
+            var image_to_search = img;
+            if(true == _ignore_particular_image)
+                image_to_search = undefined;
+            if(undefined === image_to_search){
+                for(var key in _container){
+                    if(_container[key] == 1){
+                        if(undefined != _prepend_path){
+                            a_images.push(_prepend_path + key);
+                        }else{
+                            a_images.push(key);
+                        }
+                    }else{
+                        if(undefined === _prepend_path){
+                            findImage(_container[key], true, key);
+                        }else{
+                            _prepend_path += key;
+                            findImage(_container[key], true, _prepend_path);
+                            _prepend_path = _prepend_path.substring( 0, _prepend_path.lastIndexOf( "/" ) );
+                        }
+                    }
+                }
+            }else{
+                for(var key in _container){
+                    if(_container[key] == 1 && key == image_to_search){
+                        if(undefined != _prepend_path){
+                            a_images.push(_prepend_path + key);
+                        }else{
+                            a_images.push(key);
+                        }
+                    }else if(_container[key] != 1){
+                        if(undefined === _prepend_path){
+                            findImage(_container[key], false, key);
+                        }else{
+                            _prepend_path += key;
+                            findImage(_container[key], false, _prepend_path);
+                            _prepend_path = _prepend_path.substring( 0, _prepend_path.lastIndexOf( "/" ) );
+                        }
+                    }
                 }
             }
-        }else{
-            for(var key in _container){
-                if(_container[key] == 1 && key == image_to_search){
-                    img_array.push(key);
-                }else if(_container[key] != 1){
-                    findImage(_container[key]);
-                }
-            }
+        };
+        
+        if( ! $.isEmptyObject(destination) ){
+            findImage(destination);
+            
+            // If a particular image name was given (4th arg), but was not found by findImage(),
+            // then the path (4rd arg) folder again for a random image
+            if(0 == a_images.length)
+                findImage(destination, true);
+            
+            console.table(a_images);
+            
         }
-    };
-    
-    if( ! $.isEmptyObject(destination) ){
-        findImage(destination);
         
-        // If a particular image name was given (4th arg), but was not found by findImage(),
-        // then the path (4rd arg) folder again for a random image
-        if(0 == img_array.length)
-            findImage(destination, true);
-        
-        console.log(img_array);
-        
-        if(0 != img_array.length)
-            return assembleWholePath(path, getRandArrayValue(img_array));
-    }
+        if(0 != a_images.length){
+            final_result = assembleWholePath(a_subfolders, getRandArrayValue(a_images));
+        }else{
+            __it -= 1;
+            if(__it < 0){
+                findImage(obj, true);
+                final_result = assembleWholePath(a_subfolders, getRandArrayValue(a_images));
+                return;
+            }
+            
+            a_subfolders.pop();
+            traverseLoop(__it);
+        }
+})(a_subfolders.length);
     
     function getRandArrayValue(_array){
         return _array[Math.floor((Math.random() * _array.length) + 0)];
@@ -88,17 +134,26 @@ this.myFunction = function(obj, root, path, img){
     function assembleWholePath(_path, _img){
         if(undefined === _path || undefined ===_img)
             return undefined;
-            
-        return root + _path + _img;
+
+        if(typeof _path == "object")
+            return root + _path.join("") + _img;
+        else
+            return root + _path + _img;
     }
     
+//     findImage([root]);
+    
     // This function has failed to find and image
-    return undefined;
+    return final_result;
 };
 }).apply(mark);
 
 $(document).ready(function(){
-    var res = mark.myFunction(hotelsImgLibCont, "COUNTRIES", "/hungary/balaton/azur/", "/11482-club-imola-hotel-img_b.jpg");
+    var res = mark.myFunction(hotelsImgLibCont, "COUNTRIES", "/astoria/");
+    console.log(res);
+    res = mark.myFunction(hotelsImgLibCont, "COUNTRIES", "/hungary/balaton", "/11482-club-imola-hotel-img_b.jpg");
+    console.log(res);
+    res = mark.myFunction(hotelsImgLibCont, "COUNTRIES", "/hungary/balaton", "/xxxxx.jpg");
     console.log(res);
     
     

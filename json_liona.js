@@ -1,4 +1,5 @@
 var hotelsImgLibCont = {
+   "/11485-club-imola-hotel-img_b.jpg" : 1,
    "/hungary" : {
       "/balaton" : {
 	"/2008-hotel-azur-img_b.jpg" : 1,
@@ -10,8 +11,31 @@ var hotelsImgLibCont = {
          },
          "/azur" : {
             "/club-imola" : {
+                "/astoria" : {
+                    "/11514-hotel-astoria-img_b.jpg" : 1,
+                    "/11511-hotel-astoria-img_b.jpg" : 1,
+                    "/11513-hotel-astoria-img_b.jpg" : 1,
+                    "/11512-hotel-astoria-img_b.jpg" : 1,
+                    "/1998-hotel-astoria-img_b.jpg" : 1,
+                    "/1993-hotel-astoria-img_b.jpg" : 1,
+                    "/11510-hotel-astoria-img_b.jpg" : 1,
+                    "/1996-hotel-astoria-img_b.jpg" : 1
+                },
                 "/11485-club-imola-hotel-img_b.jpg" : 1,
                 "/11482-club-imola-hotel-img_b.jpg" : 1,
+                "/aranypart" : {
+                    "/11502-Hotel Aranypart-img_b.jpg" : 1,
+                    "/11509-Hotel Aranypart-img_b.jpg" : 1,
+                    "/11506-Hotel Aranypart-img_b.jpg" : 1,
+                    "/11503-Hotel Aranypart-img_b.jpg" : 1,
+                    "/11500-Hotel Aranypart-img_b.jpg" : 1,
+                    "/11508-Hotel Aranypart-img_b.jpg" : 1,
+                    "/11507-Hotel Aranypart-img_b.jpg" : 1,
+                    "/11505-Hotel Aranypart-img_b.jpg" : 1,
+                    "/11501-Hotel Aranypart-img_b.jpg" : 1,
+                    "/11504-Hotel Aranypart-img_b.jpg" : 1,
+                    "/11499-Hotel Aranypart-img_b.jpg" : 1
+                },
                 "/11486-club-imola-hotel-img_b.jpg" : 1,
                 "/11483-club-imola-hotel-img_b.jpg" : 1
             },
