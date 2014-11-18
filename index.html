@@ -29,7 +29,7 @@ this.myFunction = function(obj, root, path, img){
     });
     
     var destination;
-    var img_array = new Array();
+    var a_images = new Array();
     
     
     // uses local 'destination' variable to store images, recursive
@@ -54,9 +54,9 @@ this.myFunction = function(obj, root, path, img){
             for(var key in _container){
                 if(_container[key] == 1){
                     if(undefined != _prepend_path){
-                        img_array.push(_prepend_path + key);
+                        a_images.push(_prepend_path + key);
                     }else{
-                        img_array.push(key);
+                        a_images.push(key);
                     }
                 }else{
                     if(undefined === _prepend_path){
@@ -72,9 +72,9 @@ this.myFunction = function(obj, root, path, img){
             for(var key in _container){
                 if(_container[key] == 1 && key == image_to_search){
                     if(undefined != _prepend_path){
-                        img_array.push(_prepend_path + key);
+                        a_images.push(_prepend_path + key);
                     }else{
-                        img_array.push(key);
+                        a_images.push(key);
                     }
                 }else if(_container[key] != 1){
                     if(undefined === _prepend_path){
@@ -94,13 +94,13 @@ this.myFunction = function(obj, root, path, img){
         
         // If a particular image name was given (4th arg), but was not found by findImage(),
         // then the path (4rd arg) folder again for a random image
-        if(0 == img_array.length)
+        if(0 == a_images.length)
             findImage(destination, true);
         
-        console.table(img_array);
+        console.table(a_images);
         
-        if(0 != img_array.length)
-            return assembleWholePath(a_subfolders, getRandArrayValue(img_array));
+        if(0 != a_images.length)
+            return assembleWholePath(a_subfolders, getRandArrayValue(a_images));
     }
     
     function getRandArrayValue(_array){
@@ -123,7 +123,7 @@ this.myFunction = function(obj, root, path, img){
 }).apply(mark);
 
 $(document).ready(function(){
-    var res = mark.myFunction(hotelsImgLibCont, "COUNTRIES", "/hungary/balaton/azur/", "/11482-club-imola-hotel-img_b.jpg");
+    var res = mark.myFunction(hotelsImgLibCont, "COUNTRIES", "/hungary/balaton/azur/"/*, "/11482-club-imola-hotel-img_b.jpg"*/);
     console.log(res);
     
     
