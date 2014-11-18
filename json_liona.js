@@ -1,4 +1,5 @@
 var hotelsImgLibCont = {
+   "/11485-club-imola-hotel-img_b.jpg" : 1,
    "/hungary" : {
       "/balaton" : {
 	"/2008-hotel-azur-img_b.jpg" : 1,
