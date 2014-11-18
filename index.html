@@ -32,7 +32,7 @@ this.myFunction = function(obj, root, path, img){
     var a_images = new Array();
     
     
-    // uses local 'destination' variable to store images, recursive
+    // uses local 'destination' variable to store array of subfolders, recursive
     (function parseJSONobject(_current, _it, _subfolders_array_len){
         var ret = _current[ a_subfolders[_it] ];
         if(_it < _subfolders_array_len-1){
@@ -44,7 +44,7 @@ this.myFunction = function(obj, root, path, img){
     })(obj, 0, a_subfolders.length);
     
     
-    // uses local 'destination' variable to store images and 
+    // uses local 'a_images' variable to store images and 
     // local 'img' variable for image name reference, recursive
     function findImage(_container,_ignore_particular_image, _prepend_path){
         var image_to_search = img;
